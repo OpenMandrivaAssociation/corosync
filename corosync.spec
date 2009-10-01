@@ -2,18 +2,23 @@
 %define buildtrunk 0
 %{?alphatag: %define buildtrunk 1}
 %{?_with_buildtrunk: %define buildtrunk 1}
+%define major 4
+%define libname %mklibname corosync %major
+%define libnamedevel %mklibname -d corosync
+#define _disable_ld_no_undefined 1
 
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 1.0.0
+Version: 1.1.0
 Release: %mkrel 1
 License: BSD
 Group: System/Base
 URL: http://www.openais.org
 Source0: http://developer.osdl.org/dev/openais/downloads/corosync-%{version}/corosync-%{version}.tar.gz
+Patch1:	corosync-fix-linking.patch
 
 # Runtime bits
-Requires: corosynclib >= %{version}-%{release}
+Requires: %{libname} >= %{version}-%{release}
 Requires(pre): rpm-helper
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
@@ -30,28 +35,31 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-root
 This package contains the Corosync Cluster Engine Executive, several default
 APIs and libraries, default configuration files, and an init script.
 
-%package -n corosynclib
+%package -n %{libname}
 Summary: The Corosync Cluster Engine Libraries
 Group: System/Libraries
 Conflicts: corosync < 0.92-7
+Obsoletes: corosynclib < 1.1.0
 
-%description -n corosynclib
+%description -n %{libname}
 This package contains corosync libraries.
 
-%package -n corosynclib-devel
+%package -n %{libnamedevel}
 Summary: The Corosync Cluster Engine Development Kit
 Group: Development/C
-Requires: corosynclib = %{version}-%{release}
+Requires: %{libname} = %{version}-%{release}
 Requires: pkgconfig
-Provides: corosync-devel = %{version}
+Provides: corosync-devel = %{version} corosynclibs-devel = %{version}
 Obsoletes: corosync-devel < 0.92-7
+Obsoletes: corosynclibs-devel < 1.1.0
 
-%description -n corosynclib-devel
+%description -n %{libnamedevel}
 This package contains include files and man pages used to develop using
 The Corosync Cluster Engine APIs.
 
 %prep
 %setup -q -n corosync-%{version}
+%patch1 -p1 -b .linkrt
 
 %if %{buildtrunk}
 ./autogen.sh
@@ -94,19 +102,14 @@ rm -rf %{buildroot}
 [ "$1" -ge "1" ] && /sbin/service corosync condrestart &>/dev/null || :
 
 %if %mdkversion < 200900
-%post -n corosynclib -p /sbin/ldconfig
-%postun -n corosynclib -p /sbin/ldconfig
+%post -n %{libname} -p /sbin/ldconfig
+%postun -n %{libname} -p /sbin/ldconfig
 %endif
 
 %files 
 %defattr(-,root,root,-)
 %doc LICENSE SECURITY
-%{_sbindir}/corosync
-%{_sbindir}/corosync-keygen
-%{_sbindir}/corosync-objctl
-%{_sbindir}/corosync-cfgtool
-%{_sbindir}/corosync-fplay
-%{_sbindir}/corosync-pload
+%{_sbindir}/corosync*
 %dir %{_sysconfdir}/corosync
 %dir %{_sysconfdir}/corosync/uidgid.d
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example
@@ -118,11 +121,11 @@ rm -rf %{buildroot}
 %{_mandir}/man8/corosync-objctl.8*
 %{_mandir}/man5/corosync.conf.5*
 
-%files -n corosynclib
+%files -n %{libname}
 %defattr(-,root,root,-)
 %{_libdir}/lib*.so.*
 
-%files -n corosynclib-devel
+%files -n %{libnamedevel}
 %defattr(-,root,root,-)
 %doc LICENSE README.devmap
 %{_includedir}/corosync/
