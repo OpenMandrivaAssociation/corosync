@@ -9,7 +9,7 @@
 
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 1.1.0
+Version: 1.1.2
 Release: %mkrel 1
 License: BSD
 Group: System/Base
