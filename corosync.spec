@@ -9,7 +9,7 @@
 
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 1.1.2
+Version: 1.2.0
 Release: %mkrel 1
 License: BSD
 Group: System/Base
@@ -61,9 +61,9 @@ The Corosync Cluster Engine APIs.
 %setup -q -n corosync-%{version}
 %patch1 -p1 -b .linkrt
 
-%if %{buildtrunk}
+#if %{buildtrunk}
 ./autogen.sh
-%endif
+#endif
 
 #%{_configure}	CFLAGS="$(echo '%{optflags}')" \
 #		--prefix=%{_prefix} \
@@ -82,7 +82,8 @@ rm -rf %{buildroot}
 #make install DESTDIR=%{buildroot}
 %makeinstall_std
 install -d %{buildroot}%{_initddir}
-install -m 755 init/redhat %{buildroot}%{_initddir}/corosync
+mv %{buildroot}/etc/init.d/* %{buildroot}/%{_initddir}
+#install -m 755 init/generic %{buildroot}%{_initddir}/corosync
 
 ## tree fixup
 # drop static libs
@@ -138,3 +139,4 @@ rm -rf %{buildroot}
 %{_mandir}/man8/logsys_overview.8*
 %{_mandir}/man8/votequorum_overview.8*
 %{_mandir}/man8/coroipc_overview.8*
+%{_mandir}/man8/sam_overview.8*
