@@ -13,8 +13,8 @@ Version: 1.2.1
 Release: %mkrel 2
 License: BSD
 Group: System/Base
-URL: http://www.openais.org
-Source0: http://developer.osdl.org/dev/openais/downloads/corosync-%{version}/corosync-%{version}.tar.gz
+URL: http://www.corosync.org
+Source0: ftp://ftp:downloads@ftp.corosync.org/downloads/corosync-%{version}/corosync-%{version}.tar.gz
 Patch1:	corosync-fix-linking.patch
 
 # Runtime bits
