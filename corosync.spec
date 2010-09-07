@@ -119,7 +119,8 @@ rm -rf %{buildroot}
 %{_libexecdir}/lcrso/*.lcrso
 %dir %{_localstatedir}/lib/corosync
 %{_mandir}/man8/corosync_overview.8*
-%{_mandir}/man8/corosync-objctl.8*
+%{_mandir}/man8/corosync-*.8*
+%{_mandir}/man8/corosync.8*
 %{_mandir}/man5/corosync.conf.5*
 
 %files -n %{libname}
