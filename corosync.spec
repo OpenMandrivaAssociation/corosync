@@ -10,7 +10,7 @@
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
 Version: 1.2.8
-Release: %mkrel 3
+Release: %mkrel 5
 License: BSD
 Group: System/Base
 URL: http://www.corosync.org
@@ -141,3 +141,51 @@ rm -rf %{buildroot}
 %{_mandir}/man8/votequorum_overview.8*
 %{_mandir}/man8/coroipc_overview.8*
 %{_mandir}/man8/sam_overview.8*
+
+
+%changelog
+* Fri May 13 2011 Buchan Milne <bgmilne@mandriva.org> 1.2.8-3mdv2011.0
++ Revision: 674313
+- rebuild
+
+* Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 1.2.8-2
++ Revision: 663399
+- mass rebuild
+
+* Tue Sep 07 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.8-1mdv2011.0
++ Revision: 576515
+- update to new version 1.2.8
+- Update files list for new man pages
+- Update URL and source URL
+
+* Mon Aug 09 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.1-2mdv2011.0
++ Revision: 568000
+- rebuild
+
+* Tue Apr 27 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.1-1mdv2010.1
++ Revision: 539564
+- update to new version 1.2.1
+
+* Thu Mar 25 2010 Oden Eriksson <oeriksson@mandriva.com> 1.2.0-2mdv2010.1
++ Revision: 527389
+- rebuilt against nss-3.12.6
+
+* Mon Jan 04 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.0-1mdv2010.1
++ Revision: 486115
+- New version 1.2.0
+
+* Mon Nov 16 2009 Buchan Milne <bgmilne@mandriva.org> 1.1.2-1mdv2010.1
++ Revision: 466573
+- New version 1.1.2
+  Fix underlinking patch
+
+* Thu Oct 01 2009 Buchan Milne <bgmilne@mandriva.org> 1.1.0-1mdv2010.0
++ Revision: 452327
+- New version 1.1.0
+- libify partially
+
+* Wed Sep 30 2009 Buchan Milne <bgmilne@mandriva.org> 1.0.0-1mdv2010.0
++ Revision: 451196
+- import corosync
+
+
