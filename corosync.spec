@@ -7,59 +7,55 @@
 %define libnamedevel %mklibname -d corosync
 #define _disable_ld_no_undefined 1
 
-Name: corosync
-Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 1.2.8
-Release: %mkrel 5
-License: BSD
-Group: System/Base
-URL: http://www.corosync.org
-Source0: ftp://ftp:downloads@ftp.corosync.org/downloads/corosync-%{version}/corosync-%{version}.tar.gz
-Patch1:	corosync-fix-linking.patch
+Name:		corosync
+Summary:	The Corosync Cluster Engine and Application Programming Interfaces
+Version:	2.3.0
+Release:	1
+License:	BSD
+Group:		System/Base
+URL:		http://www.corosync.org
+Source0:	ftp://ftp:downloads@ftp.corosync.org/downloads/corosync-%{version}/corosync-%{version}.tar.gz
 
-# Runtime bits
-Requires: %{libname} >= %{version}-%{release}
-Requires(pre): rpm-helper
-Requires(post): rpm-helper
+Requires(post):	rpm-helper
 Requires(preun): rpm-helper
-Requires(postun): rpm-helper
-Conflicts: openais <= 0.89, openais-devel <= 0.89
+# Runtime bits
+Requires:	%{libname} >= %{version}-%{release}
+Conflicts:	openais <= 0.89, openais-devel <= 0.89
 
 %if %{buildtrunk}
 BuildRequires: autoconf automake
 %endif
 BuildRequires: nss-devel
-BuildRoot: %{_tmppath}/%{name}-%{version}-root
+BuildRequires: pkgconfig(libqb)
 
 %description 
 This package contains the Corosync Cluster Engine Executive, several default
 APIs and libraries, default configuration files, and an init script.
 
-%package -n %{libname}
-Summary: The Corosync Cluster Engine Libraries
-Group: System/Libraries
-Conflicts: corosync < 0.92-7
-Obsoletes: corosynclib < 1.1.0
+%package	-n %{libname}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	corosync < 0.92-7
+Obsoletes:	corosynclib < 1.1.0
 
-%description -n %{libname}
+%description	-n %{libname}
 This package contains corosync libraries.
 
-%package -n %{libnamedevel}
-Summary: The Corosync Cluster Engine Development Kit
-Group: Development/C
-Requires: %{libname} = %{version}-%{release}
-Requires: pkgconfig
-Provides: corosync-devel = %{version} corosynclibs-devel = %{version}
-Obsoletes: corosync-devel < 0.92-7
-Obsoletes: corosynclibs-devel < 1.1.0
+%package	-n %{libnamedevel}
+Summary:	The Corosync Cluster Engine Development Kit
+Group:		Development/C
+Requires:	%{libname} = %{version}-%{release}
+Requires:	pkgconfig
+Provides:	corosync-devel = %{version} corosynclibs-devel = %{version}
+Obsoletes:	corosync-devel < 0.92-7
+Obsoletes:	corosynclibs-devel < 1.1.0
 
-%description -n %{libnamedevel}
+%description	-n %{libnamedevel}
 This package contains include files and man pages used to develop using
 The Corosync Cluster Engine APIs.
 
 %prep
 %setup -q -n corosync-%{version}
-%patch1 -p1 -b .linkrt
 
 #if %{buildtrunk}
 ./autogen.sh
@@ -71,28 +67,25 @@ The Corosync Cluster Engine APIs.
 #		--localstatedir=%{_localstatedir} \
 #		--with-lcrso-dir=%{_libexecdir}/lcrso \
 #		--libdir=%{_libdir}
-%configure --with-lcrso-dir=%{_libexecdir}/lcrso
+%configure --enable-systemd \
+		--with-systemddir=%{_unitdir}
 
 %build
 %make
 
 %install
-rm -rf %{buildroot}
-
-#make install DESTDIR=%{buildroot}
 %makeinstall_std
-install -d %{buildroot}%{_initddir}
-mv %{buildroot}/etc/init.d/* %{buildroot}/%{_initddir}
-#install -m 755 init/generic %{buildroot}%{_initddir}/corosync
 
 ## tree fixup
 # drop static libs
 rm -f %{buildroot}%{_libdir}/*.a
+rm -f %{buildroot}%{_libdir}/*.la
 # drop docs and html docs for now
 rm -rf %{buildroot}%{_docdir}/*
 
-%clean
-rm -rf %{buildroot}
+#add logs directory
+install -d %{buildroot}/var/log/%{name}
+
 %post
 %_post_service %{name}
 
@@ -102,90 +95,39 @@ rm -rf %{buildroot}
 %postun
 [ "$1" -ge "1" ] && /sbin/service corosync condrestart &>/dev/null || :
 
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
-
 %files 
-%defattr(-,root,root,-)
 %doc LICENSE SECURITY
 %{_sbindir}/corosync*
+%{_bindir}/corosync*
 %dir %{_sysconfdir}/corosync
+%dir %{_sysconfdir}/corosync/service.d
 %dir %{_sysconfdir}/corosync/uidgid.d
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example
-%{_initddir}/corosync
-%dir %{_libexecdir}/lcrso
-%{_libexecdir}/lcrso/*.lcrso
+%config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example.udpu
 %dir %{_localstatedir}/lib/corosync
 %{_mandir}/man8/corosync_overview.8*
 %{_mandir}/man8/corosync-*.8*
 %{_mandir}/man8/corosync.8*
+%{_mandir}/man8/cmap_keys.8*
+%{_mandir}/man8/cmap_overview.8*
+%{_mandir}/man8/quorum_overview.8*
 %{_mandir}/man5/corosync.conf.5*
+%{_mandir}/man5/votequorum.5*
+%{_unitdir}/corosync-notifyd.service
+%{_unitdir}/corosync.service
+%dir /var/log/%{name}
 
 %files -n %{libname}
-%defattr(-,root,root,-)
 %{_libdir}/lib*.so.*
 
 %files -n %{libnamedevel}
-%defattr(-,root,root,-)
-%doc LICENSE README.devmap
+%doc LICENSE README.recovery
 %{_includedir}/corosync/
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/*.3*
 %{_mandir}/man8/cpg_overview.8*
-%{_mandir}/man8/evs_overview.8*
-%{_mandir}/man8/confdb_overview.8*
-%{_mandir}/man8/logsys_overview.8*
 %{_mandir}/man8/votequorum_overview.8*
-%{_mandir}/man8/coroipc_overview.8*
 %{_mandir}/man8/sam_overview.8*
-
-
-%changelog
-* Fri May 13 2011 Buchan Milne <bgmilne@mandriva.org> 1.2.8-3mdv2011.0
-+ Revision: 674313
-- rebuild
-
-* Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 1.2.8-2
-+ Revision: 663399
-- mass rebuild
-
-* Tue Sep 07 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.8-1mdv2011.0
-+ Revision: 576515
-- update to new version 1.2.8
-- Update files list for new man pages
-- Update URL and source URL
-
-* Mon Aug 09 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.1-2mdv2011.0
-+ Revision: 568000
-- rebuild
-
-* Tue Apr 27 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.1-1mdv2010.1
-+ Revision: 539564
-- update to new version 1.2.1
-
-* Thu Mar 25 2010 Oden Eriksson <oeriksson@mandriva.com> 1.2.0-2mdv2010.1
-+ Revision: 527389
-- rebuilt against nss-3.12.6
-
-* Mon Jan 04 2010 Buchan Milne <bgmilne@mandriva.org> 1.2.0-1mdv2010.1
-+ Revision: 486115
-- New version 1.2.0
-
-* Mon Nov 16 2009 Buchan Milne <bgmilne@mandriva.org> 1.1.2-1mdv2010.1
-+ Revision: 466573
-- New version 1.1.2
-  Fix underlinking patch
-
-* Thu Oct 01 2009 Buchan Milne <bgmilne@mandriva.org> 1.1.0-1mdv2010.0
-+ Revision: 452327
-- New version 1.1.0
-- libify partially
-
-* Wed Sep 30 2009 Buchan Milne <bgmilne@mandriva.org> 1.0.0-1mdv2010.0
-+ Revision: 451196
-- import corosync
-
-

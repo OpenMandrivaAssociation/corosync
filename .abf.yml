@@ -1,2 +1,4 @@
+removed_sources:
+  corosync-1.2.8.tar.gz: c9ff9ed9d561fd6732dd5b0a31a809543ccbdd33
 sources:
-  "corosync-1.2.8.tar.gz": c9ff9ed9d561fd6732dd5b0a31a809543ccbdd33
+  corosync-2.3.0.tar.gz: 9d6f18df775eaad1e09b03db1af47c8ffb45ded3
