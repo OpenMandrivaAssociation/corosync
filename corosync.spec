@@ -1,74 +1,122 @@
-# define alphatag svn1211
-%define buildtrunk 0
-%{?alphatag: %define buildtrunk 1}
-%{?_with_buildtrunk: %define buildtrunk 1}
-%define major 4
-%define libname %mklibname corosync %major
-%define libnamedevel %mklibname -d corosync
-#define _disable_ld_no_undefined 1
+%define major	4
+%define maj5	5
+%define maj6	6
+%define	libcmap		%mklibname cmap %{major}
+%define	libname_common	%mklibname corosync_common %{major}
+%define	libcpg		%mklibname cpg %{major}
+%define	libsam		%mklibname sam %{major}
+%define	libcfg		%mklibname cfg %{maj6}
+%define	libquorum	%mklibname quorum %{maj5}
+%define	libtotem_pg	%mklibname totem_pg %{maj5}
+%define	libvotequorum	%mklibname votequorum %{maj6}
+%define devname %mklibname -d corosync
 
-Name:		corosync
 Summary:	The Corosync Cluster Engine and Application Programming Interfaces
+Name:		corosync
 Version:	2.3.0
-Release:	1
+Release:	2
 License:	BSD
 Group:		System/Base
-URL:		http://www.corosync.org
+Url:		http://www.corosync.org
 Source0:	ftp://ftp:downloads@ftp.corosync.org/downloads/corosync-%{version}/corosync-%{version}.tar.gz
 
-Requires(post):	rpm-helper
-Requires(preun): rpm-helper
-# Runtime bits
-Requires:	%{libname} >= %{version}-%{release}
-Conflicts:	openais <= 0.89, openais-devel <= 0.89
-
-%if %{buildtrunk}
-BuildRequires: autoconf automake
-%endif
-BuildRequires: nss-devel
-BuildRequires: pkgconfig(libqb)
+BuildRequires:	pkgconfig(nss)
+BuildRequires:	pkgconfig(libqb)
+Requires(post,preun):	rpm-helper
 
 %description 
 This package contains the Corosync Cluster Engine Executive, several default
 APIs and libraries, default configuration files, and an init script.
 
-%package	-n %{libname}
+%package	-n %{libcmap}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	corosync < 0.92-7
-Obsoletes:	corosynclib < 1.1.0
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
 
-%description	-n %{libname}
+%description	-n %{libcmap}
 This package contains corosync libraries.
 
-%package	-n %{libnamedevel}
+%package	-n %{libname_common}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libname_common}
+This package contains corosync libraries.
+
+%package	-n %{libcpg}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libcpg}
+This package contains corosync libraries.
+
+%package	-n %{libsam}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libsam}
+This package contains corosync libraries.
+
+%package	-n %{libcfg}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libcfg}
+This package contains corosync libraries.
+
+%package	-n %{libquorum}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libquorum}
+This package contains corosync libraries.
+
+%package	-n %{libtotem_pg}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libtotem_pg}
+This package contains corosync libraries.
+
+%package	-n %{libvotequorum}
+Summary:	The Corosync Cluster Engine Libraries
+Group:		System/Libraries
+Conflicts:	%{_lib}corosync4 > 2.3.0-1
+
+%description	-n %{libvotequorum}
+This package contains corosync libraries.
+
+%package	-n %{devname}
 Summary:	The Corosync Cluster Engine Development Kit
 Group:		Development/C
-Requires:	%{libname} = %{version}-%{release}
-Requires:	pkgconfig
-Provides:	corosync-devel = %{version} corosynclibs-devel = %{version}
-Obsoletes:	corosync-devel < 0.92-7
-Obsoletes:	corosynclibs-devel < 1.1.0
+Requires:	%{libcmap} = %{version}-%{release}
+Requires:	%{libname_common} = %{version}-%{release}
+Requires:	%{libcpg} = %{version}-%{release}
+Requires:	%{libsam} = %{version}-%{release}
+Requires:	%{libcfg} = %{version}-%{release}
+Requires:	%{libquorum} = %{version}-%{release}
+Requires:	%{libtotem_pg} = %{version}-%{release}
+Requires:	%{libvotequorum} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}
 
-%description	-n %{libnamedevel}
+%description	-n %{devname}
 This package contains include files and man pages used to develop using
 The Corosync Cluster Engine APIs.
 
 %prep
-%setup -q -n corosync-%{version}
+%setup -q
 
-#if %{buildtrunk}
 ./autogen.sh
-#endif
-
-#%{_configure}	CFLAGS="$(echo '%{optflags}')" \
-#		--prefix=%{_prefix} \
-#		--sysconfdir=%{_sysconfdir} \
-#		--localstatedir=%{_localstatedir} \
-#		--with-lcrso-dir=%{_libexecdir}/lcrso \
-#		--libdir=%{_libdir}
-%configure --enable-systemd \
-		--with-systemddir=%{_unitdir}
+%configure2_5x \
+	--disable-static \
+	--enable-systemd \
+	--with-systemddir=%{_unitdir}
 
 %build
 %make
@@ -79,7 +127,6 @@ The Corosync Cluster Engine APIs.
 ## tree fixup
 # drop static libs
 rm -f %{buildroot}%{_libdir}/*.a
-rm -f %{buildroot}%{_libdir}/*.la
 # drop docs and html docs for now
 rm -rf %{buildroot}%{_docdir}/*
 
@@ -119,10 +166,31 @@ install -d %{buildroot}/var/log/%{name}
 %{_unitdir}/corosync.service
 %dir /var/log/%{name}
 
-%files -n %{libname}
-%{_libdir}/lib*.so.*
+%files -n %{libcmap}
+%{_libdir}/libcmap.so.%{major}*
 
-%files -n %{libnamedevel}
+%files -n %{libname_common}
+%{_libdir}/libcorosync_common.so.%{major}*
+
+%files -n %{libcpg}
+%{_libdir}/libcpg.so.%{major}*
+
+%files -n %{libsam}
+%{_libdir}/libsam.so.%{major}*
+
+%files -n %{libcfg}
+%{_libdir}/libcfg.so.%{maj6}*
+
+%files -n %{libquorum}
+%{_libdir}/libquorum.so.%{maj5}*
+
+%files -n %{libtotem_pg}
+%{_libdir}/libtotem_pg.so.%{maj5}*
+
+%files -n %{libvotequorum}
+%{_libdir}/libvotequorum.so.%{maj6}*
+
+%files -n %{devname}
 %doc LICENSE README.recovery
 %{_includedir}/corosync/
 %{_libdir}/lib*.so
