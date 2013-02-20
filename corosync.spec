@@ -31,7 +31,7 @@ APIs and libraries, default configuration files, and an init script.
 %package	-n %{libcmap}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libcmap}
 This package contains corosync libraries.
@@ -39,7 +39,7 @@ This package contains corosync libraries.
 %package	-n %{libname_common}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Obsoletes:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libname_common}
 This package contains corosync libraries.
@@ -47,7 +47,7 @@ This package contains corosync libraries.
 %package	-n %{libcpg}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libcpg}
 This package contains corosync libraries.
@@ -55,7 +55,7 @@ This package contains corosync libraries.
 %package	-n %{libsam}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libsam}
 This package contains corosync libraries.
@@ -63,7 +63,7 @@ This package contains corosync libraries.
 %package	-n %{libcfg}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libcfg}
 This package contains corosync libraries.
@@ -71,7 +71,7 @@ This package contains corosync libraries.
 %package	-n %{libquorum}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libquorum}
 This package contains corosync libraries.
@@ -79,7 +79,7 @@ This package contains corosync libraries.
 %package	-n %{libtotem_pg}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libtotem_pg}
 This package contains corosync libraries.
@@ -87,7 +87,7 @@ This package contains corosync libraries.
 %package	-n %{libvotequorum}
 Summary:	The Corosync Cluster Engine Libraries
 Group:		System/Libraries
-Conflicts:	%{_lib}corosync4 > 2.3.0-1
+Conflicts:	%{_lib}corosync4 > 2.3.0-0
 
 %description	-n %{libvotequorum}
 This package contains corosync libraries.
