@@ -13,12 +13,12 @@
 
 Summary:	The Corosync Cluster Engine and Application Programming Interfaces
 Name:		corosync
-Version:	2.3.0
-Release:	2
+Version:	2.3.3
+Release:	1
 License:	BSD
 Group:		System/Base
 Url:		http://www.corosync.org
-Source0:	ftp://ftp:downloads@ftp.corosync.org/downloads/corosync-%{version}/corosync-%{version}.tar.gz
+Source0:	http://build.clusterlabs.org/corosync/releases/corosync-%{version}.tar.gz
 
 BuildRequires:	pkgconfig(nss)
 BuildRequires:	pkgconfig(libqb)
