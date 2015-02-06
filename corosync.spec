@@ -14,7 +14,7 @@
 Summary:	The Corosync Cluster Engine and Application Programming Interfaces
 Name:		corosync
 Version:	2.3.3
-Release:	1
+Release:	2
 License:	BSD
 Group:		System/Base
 Url:		http://www.corosync.org
