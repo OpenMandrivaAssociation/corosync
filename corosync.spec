@@ -17,7 +17,7 @@ Version:	2.3.3
 Release:	2
 License:	BSD
 Group:		System/Base
-Url:		http://www.corosync.org
+Url:		https://www.corosync.org
 Source0:	http://build.clusterlabs.org/corosync/releases/corosync-%{version}.tar.gz
 
 BuildRequires:	pkgconfig(nss)
